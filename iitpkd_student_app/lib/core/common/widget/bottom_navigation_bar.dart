@@ -21,24 +21,23 @@ class AppBottomNavigationBar extends ConsumerStatefulWidget {
 class _AppBottomNavigationBarState
     extends ConsumerState<AppBottomNavigationBar> {
   final List<Widget> _pages = const [
-    HomePage(),
-    TimetablePage(),
-    BusSchedulePage(),
-    MessMenuPage(),
-    AccountPage(),
+    HomePage(key: ValueKey('home')),
+    TimetablePage(key: ValueKey('timetable')),
+    BusSchedulePage(key: ValueKey('bus')),
+    MessMenuPage(key: ValueKey('mess')),
+    AccountPage(key: ValueKey('account')),
   ];
 
   @override
   Widget build(BuildContext context) {
     final currentIndex = ref.watch(bottomNavIndexProvider);
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (currentIndex != 0) {
+    return PopScope(
+      canPop: currentIndex == 0,
+      onPopInvoked: (bool didPop) {
+        if (!didPop && currentIndex != 0) {
           ref.read(bottomNavIndexProvider.notifier).state = 0;
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         body: AnimatedSwitcher(
